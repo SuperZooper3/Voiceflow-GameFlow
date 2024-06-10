@@ -29,6 +29,10 @@ public class VoiceflowController : MonoBehaviour
         SendTextVoiceflow(textPayload);
     }
 
+    public void UpdateTextPayload(string newText) {
+        textPayload = newText;
+    }
+
     void InteractVoiceflow(string payloadJson) {
         StartCoroutine(InteractVoiceflowWorker(payloadJson));
     }

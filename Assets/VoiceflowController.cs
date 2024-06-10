@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
 using System;
-// using Newtonsoft.Json; 
+using Newtonsoft.Json; 
 
 public class VoiceflowController : MonoBehaviour
 {
@@ -34,6 +34,7 @@ public class VoiceflowController : MonoBehaviour
             webRequest.SetRequestHeader("Authorization", DM_API_KEY);
             webRequest.SetRequestHeader("content-type", "application/json");
             webRequest.SetRequestHeader("accept", "application/json");
+            webRequest.SetRequestHeader("versionID","production");
 
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(payloadJson);
             webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -55,8 +56,25 @@ public class VoiceflowController : MonoBehaviour
             // wrap the response in a wrapper class so that it can be deserialized correctly
             string wrappedResponse = "{\"items\":" + webRequest.downloadHandler.text + "}";
 
-            GenericResponseWrapper genericResponses = JsonUtility.FromJson<GenericResponseWrapper>(wrappedResponse);
-            Debug.Log(genericResponses.items[0].type);
+            GenericResponseWrapper genericResponses = JsonConvert.DeserializeObject<GenericResponseWrapper>(wrappedResponse);
+            foreach (var item in genericResponses.items)
+            {
+                Debug.Log(item.type);
+                switch (item.type)
+                {
+                    case "text":
+                        TextResponsePayload textPayload = item.payload.ToObject<TextResponsePayload>();
+                        Debug.Log(textPayload.message);
+                        break;
+                    case "custom":
+                        CustomResponsePayload customPayload = item.payload.ToObject<CustomResponsePayload>();
+                        Debug.Log(customPayload.value);
+                        break;
+                    default:
+                        Debug.LogWarning("Unknown type: " + item.type);
+                        break;
+                }
+            }
         }
     }
 
@@ -66,7 +84,7 @@ public class VoiceflowController : MonoBehaviour
             action = new InterractAction()
         };
 
-        string payloadJson = JsonUtility.ToJson(payload);
+        string payloadJson = JsonConvert.SerializeObject(payload);
         InteractVoiceflow(payloadJson);
     }
 }
@@ -82,14 +100,24 @@ public class InterractAction {
     public string payload = "";
 }
 
-[System.Serializable]
 public class GenericResponseWrapper
 {
     public List<GenericResponseItem> items;
 }
 
-[System.Serializable]
 public class GenericResponseItem
 {
     public string type;
+    public Newtonsoft.Json.Linq.JToken payload;
+}
+
+public abstract class ResponsePayload{
+}
+
+public class TextResponsePayload : ResponsePayload {
+    public string message;
+}
+
+public class CustomResponsePayload : ResponsePayload {
+    public int value;
 }

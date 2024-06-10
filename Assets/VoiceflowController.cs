@@ -51,6 +51,12 @@ public class VoiceflowController : MonoBehaviour
             {
                 Debug.Log(webRequest.downloadHandler.text);
             }
+
+            // wrap the response in a wrapper class so that it can be deserialized correctly
+            string wrappedResponse = "{\"items\":" + webRequest.downloadHandler.text + "}";
+
+            GenericResponseWrapper genericResponses = JsonUtility.FromJson<GenericResponseWrapper>(wrappedResponse);
+            Debug.Log(genericResponses.items[0].type);
         }
     }
 
@@ -61,8 +67,6 @@ public class VoiceflowController : MonoBehaviour
         };
 
         string payloadJson = JsonUtility.ToJson(payload);
-        Debug.Log(payloadJson);
-
         InteractVoiceflow(payloadJson);
     }
 }
@@ -76,4 +80,16 @@ public class InterractPayload {
 public class InterractAction {
     public string type = "launch";
     public string payload = "";
+}
+
+[System.Serializable]
+public class GenericResponseWrapper
+{
+    public List<GenericResponseItem> items;
+}
+
+[System.Serializable]
+public class GenericResponseItem
+{
+    public string type;
 }

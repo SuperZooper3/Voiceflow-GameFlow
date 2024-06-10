@@ -329,6 +329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DM_API_KEY: VF.DM.66675dabd088ba19d58181e9.4s0wXfovPDbxHJxf
   userID: test-user-unity
+  textPayload: Hello!
 --- !u!4 &1654853210
 Transform:
   m_ObjectHideFlags: 0

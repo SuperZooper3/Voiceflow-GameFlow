@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine;
 using System;
-using Newtonsoft.Json; 
+using Newtonsoft.Json;
+using TMPro;
 
 public class VoiceflowController : MonoBehaviour
 {
     public string DM_API_KEY = "YOUR KEY GOES HERE";
     public string userID = "test-user-unity";
     public string textPayload = "Hello";
+    public TextMeshProUGUI outputText;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +22,11 @@ public class VoiceflowController : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SendButtonClicked() {
+        Debug.Log("Send button clicked");
+        SendTextVoiceflow(textPayload);
     }
 
     void InteractVoiceflow(string payloadJson) {
@@ -65,11 +72,11 @@ public class VoiceflowController : MonoBehaviour
                 {
                     case "text":
                         TextResponsePayload textPayload = item.payload.ToObject<TextResponsePayload>();
-                        Debug.Log(textPayload.message);
+                        HandleTextResponse(textPayload);
                         break;
                     case "custom":
                         CustomResponsePayload customPayload = item.payload.ToObject<CustomResponsePayload>();
-                        Debug.Log(customPayload.value);
+                        HandleCustomResponse(customPayload);
                         break;
                     default:
                         Debug.LogWarning("Unknown type: " + item.type);
@@ -79,7 +86,6 @@ public class VoiceflowController : MonoBehaviour
         }
     }
 
-
     void LaunchVoiceflow() {
         InterractPayload payload = new InterractPayload {
             action = new InterractAction()
@@ -87,6 +93,26 @@ public class VoiceflowController : MonoBehaviour
 
         string payloadJson = JsonConvert.SerializeObject(payload);
         InteractVoiceflow(payloadJson);
+    }
+
+    void SendTextVoiceflow(string text) {
+        InterractPayload payload = new InterractPayload {
+            action = new InterractAction()
+        };
+        payload.action.type = "text";
+        payload.action.payload = text;
+
+        string payloadJson = JsonConvert.SerializeObject(payload);
+        InteractVoiceflow(payloadJson);
+    }
+
+    void HandleTextResponse(TextResponsePayload textPayload) {
+        Debug.Log(textPayload.message);
+        outputText.text += textPayload.message + "\n";
+    }
+
+    void HandleCustomResponse(CustomResponsePayload customPayload) {
+        Debug.Log(customPayload.value);
     }
 }
 

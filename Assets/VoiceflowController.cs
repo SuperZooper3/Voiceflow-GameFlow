@@ -46,7 +46,8 @@ public class VoiceflowController : MonoBehaviour
 
             if (webRequest.result == UnityWebRequest.Result.ConnectionError || webRequest.result == UnityWebRequest.Result.ProtocolError)
             {
-                Debug.LogError(webRequest.error);
+                Debug.LogError($"Voiceflow interact error: {webRequest.error} - {webRequest.downloadHandler.text}");
+                yield break;
             }
             else
             {

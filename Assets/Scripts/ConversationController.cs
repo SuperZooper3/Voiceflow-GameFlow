@@ -30,6 +30,14 @@ public class ConversationController : MonoBehaviour
         inputField.text = "";
     }
 
+    public void GiveItemClicked(int slot) {
+        string item = inventoryController.inventory[slot];
+        if (item != "") {
+            voiceflowController.SendTextVoiceflow($"*The climber gifted you their {item}*", responseHandlerPackage);
+            isWaitingForResponse = true;
+        }
+    }
+
     public void UpdateTextPayload(string newText) {
         textPayload = newText;
     }

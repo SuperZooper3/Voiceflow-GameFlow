@@ -15,6 +15,7 @@ public class ConversationController : MonoBehaviour
     public string textPayload = "";
     public GameObject readingItems;
     public GameObject inputItems;
+    public GameObject waitingItems;
 
     private bool isWaitingForResponse = false;
     private bool isReadingResponse = false;
@@ -52,12 +53,15 @@ public class ConversationController : MonoBehaviour
         if (isReadingResponse) {
             readingItems.SetActive(true);
             inputItems.SetActive(false);
+            waitingItems.SetActive(false);
         } else if (isWaitingForResponse) {
             readingItems.SetActive(false);
             inputItems.SetActive(false);
+            waitingItems.SetActive(true);
         } else {
             readingItems.SetActive(false);
             inputItems.SetActive(true);
+            waitingItems.SetActive(false);
         }
     }
 

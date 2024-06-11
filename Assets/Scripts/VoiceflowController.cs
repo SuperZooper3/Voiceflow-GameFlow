@@ -10,12 +10,11 @@ public class VoiceflowController : MonoBehaviour
 {
     public string DM_API_KEY = "YOUR KEY GOES HERE";
     public string userID = "test-user-unity";
-    public string textPayload = "Hello";
-    public TextMeshProUGUI outputText;
+
     // Start is called before the first frame update
     void Start()
     {
-        LaunchVoiceflow();
+
     }
 
     // Update is called once per frame
@@ -24,20 +23,11 @@ public class VoiceflowController : MonoBehaviour
         
     }
 
-    public void SendButtonClicked() {
-        Debug.Log("Send button clicked");
-        SendTextVoiceflow(textPayload);
+    void InteractVoiceflow(string payloadJson, ResponseHandlerPackage responseHandlerPackage) {
+        StartCoroutine(InteractVoiceflowWorker(payloadJson, responseHandlerPackage));
     }
 
-    public void UpdateTextPayload(string newText) {
-        textPayload = newText;
-    }
-
-    void InteractVoiceflow(string payloadJson) {
-        StartCoroutine(InteractVoiceflowWorker(payloadJson));
-    }
-
-    IEnumerator InteractVoiceflowWorker(string payloadJson)
+    IEnumerator InteractVoiceflowWorker(string payloadJson, ResponseHandlerPackage responseHandlerPackage)
     {
         string url = $"https://general-runtime.voiceflow.com/state/user/{userID}/interact";
         using (UnityWebRequest webRequest = new UnityWebRequest(url,"POST"))
@@ -76,11 +66,11 @@ public class VoiceflowController : MonoBehaviour
                 {
                     case "text":
                         TextResponsePayload textPayload = item.payload.ToObject<TextResponsePayload>();
-                        HandleTextResponse(textPayload);
+                        responseHandlerPackage.textHandler(textPayload.message);
                         break;
                     case "custom":
                         CustomResponsePayload customPayload = item.payload.ToObject<CustomResponsePayload>();
-                        HandleCustomResponse(customPayload);
+                        responseHandlerPackage.customHandler(customPayload.value);
                         break;
                     default:
                         Debug.LogWarning("Unknown type: " + item.type);
@@ -90,16 +80,16 @@ public class VoiceflowController : MonoBehaviour
         }
     }
 
-    void LaunchVoiceflow() {
+    public void LaunchVoiceflow(ResponseHandlerPackage responseHandlerPackage) {
         InterractPayload payload = new InterractPayload {
             action = new InterractAction()
         };
 
         string payloadJson = JsonConvert.SerializeObject(payload);
-        InteractVoiceflow(payloadJson);
+        InteractVoiceflow(payloadJson, responseHandlerPackage);
     }
 
-    void SendTextVoiceflow(string text) {
+    public void SendTextVoiceflow(string text, ResponseHandlerPackage responseHandlerPackage) {
         InterractPayload payload = new InterractPayload {
             action = new InterractAction()
         };
@@ -107,16 +97,7 @@ public class VoiceflowController : MonoBehaviour
         payload.action.payload = text;
 
         string payloadJson = JsonConvert.SerializeObject(payload);
-        InteractVoiceflow(payloadJson);
-    }
-
-    void HandleTextResponse(TextResponsePayload textPayload) {
-        Debug.Log(textPayload.message);
-        outputText.text += textPayload.message + "\n";
-    }
-
-    void HandleCustomResponse(CustomResponsePayload customPayload) {
-        Debug.Log(customPayload.value);
+        InteractVoiceflow(payloadJson, responseHandlerPackage);
     }
 }
 
@@ -151,4 +132,9 @@ public class TextResponsePayload : ResponsePayload {
 
 public class CustomResponsePayload : ResponsePayload {
     public int value;
+}
+
+public class ResponseHandlerPackage {
+    public Action<string> textHandler;
+    public Action<int> customHandler;
 }

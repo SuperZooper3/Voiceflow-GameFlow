@@ -68,9 +68,9 @@ public class VoiceflowController : MonoBehaviour
                         TextResponsePayload textPayload = item.payload.ToObject<TextResponsePayload>();
                         responseHandlerPackage.textHandler(textPayload.message);
                         break;
-                    case "custom":
-                        CustomResponsePayload customPayload = item.payload.ToObject<CustomResponsePayload>();
-                        responseHandlerPackage.customHandler(customPayload.value);
+                    case "face_talk":
+                        FaceTalkResponsePayload customPayload = item.payload.ToObject<FaceTalkResponsePayload>();
+                        responseHandlerPackage.faceTalkHandler(customPayload.message, customPayload.face);
                         break;
                     default:
                         Debug.LogWarning("Unknown type: " + item.type);
@@ -130,11 +130,12 @@ public class TextResponsePayload : ResponsePayload {
     public string message;
 }
 
-public class CustomResponsePayload : ResponsePayload {
-    public int value;
+public class FaceTalkResponsePayload : ResponsePayload {
+    public string message;
+    public string face;
 }
 
 public class ResponseHandlerPackage {
     public Action<string> textHandler;
-    public Action<int> customHandler;
+    public Action<string,string> faceTalkHandler;
 }

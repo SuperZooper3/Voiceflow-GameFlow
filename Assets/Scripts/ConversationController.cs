@@ -7,6 +7,7 @@ using System;
 public class ConversationController : MonoBehaviour
 {
     public VoiceflowController voiceflowController;
+    public FaceController faceController;
 
     public TextMeshProUGUI outputTextBox;
     public string textPayload = "";
@@ -21,6 +22,7 @@ public class ConversationController : MonoBehaviour
     public void SendButtonClicked() {
         Debug.Log("Send button clicked");
         voiceflowController.SendTextVoiceflow(textPayload, responseHandlerPackage);
+        isWaitingForResponse = true;
     }
 
     public void UpdateTextPayload(string newText) {
@@ -30,7 +32,7 @@ public class ConversationController : MonoBehaviour
     public ConversationController() {
         responseHandlerPackage = new ResponseHandlerPackage{
             textHandler = EnqueueChatMessage,
-            customHandler = HandleCustomEvent,
+            faceTalkHandler = HandleFaceTalk,
         };
     }
 
@@ -72,9 +74,17 @@ public class ConversationController : MonoBehaviour
         isReadingResponse = true;
     }
 
-    public void HandleCustomEvent(int value) {
+    public void HandleFaceTalk(string newText, string face) {
         isWaitingForResponse = false;
-        Debug.Log("Custom event: " + value);
+        Debug.Log("HandleFaceTalk: " + newText);
+        Debug.Log("Conversation queue count: " + conversationQueue.Count);
+        if (isReadingResponse) {
+            conversationQueue.Enqueue(newText);
+        } else {
+            SetOutputText(newText);
+        }
+        isReadingResponse = true;
+        faceController.SetFace(face);
     }
 
     public void ContinueButtonClicked() {

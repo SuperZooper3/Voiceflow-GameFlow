@@ -11,11 +11,10 @@ public class FaceController : MonoBehaviour
     public Texture2D angryFace;
     public Texture2D distractedFace;
     public Texture2D panicFace;
-    public Texture2D suprisedFace;
+    public Texture2D surprisedFace;
     public Texture2D upsetFace;
     public Texture2D phoneFace;
     public Texture2D badFace;
-    public string face = "normal";
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +24,7 @@ public class FaceController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetFace(face);
+
     }
 
     public void SetFace(string face) {
@@ -45,8 +44,8 @@ public class FaceController : MonoBehaviour
             case "panic":
                 selfImage.sprite = Sprite.Create(panicFace, new Rect(0, 0, panicFace.width, panicFace.height), new Vector2(0.5f, 0.5f));
                 break;
-            case "suprised":
-                selfImage.sprite = Sprite.Create(suprisedFace, new Rect(0, 0, suprisedFace.width, suprisedFace.height), new Vector2(0.5f, 0.5f));
+            case "surprised":
+                selfImage.sprite = Sprite.Create(surprisedFace, new Rect(0, 0, surprisedFace.width, surprisedFace.height), new Vector2(0.5f, 0.5f));
                 break;
             case "upset":
                 selfImage.sprite = Sprite.Create(upsetFace, new Rect(0, 0, upsetFace.width, upsetFace.height), new Vector2(0.5f, 0.5f));

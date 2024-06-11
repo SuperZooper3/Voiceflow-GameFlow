@@ -42,6 +42,9 @@ public class InventoryController : MonoBehaviour
             inventory[1] = itemName;
         } else if (inventory[2] == "") {
             inventory[2] = itemName;
+        } else {
+            inventory[0] = itemName;
+            Debug.Log("Inventory full, replacing first item");
         }
     }
 

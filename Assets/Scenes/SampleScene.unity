@@ -402,6 +402,7 @@ MonoBehaviour:
   voiceflowController: {fileID: 1654853209}
   faceController: {fileID: 168794175}
   backgroundController: {fileID: 1230506963}
+  inventoryController: {fileID: 1094619037}
   outputTextBox: {fileID: 95109488}
   inputField: {fileID: 660680570}
   textPayload: Hello
@@ -895,7 +896,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 2
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1618,7 +1619,7 @@ MonoBehaviour:
   m_fontSizeMax: 50
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0

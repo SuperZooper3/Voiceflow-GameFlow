@@ -76,6 +76,10 @@ public class VoiceflowController : MonoBehaviour
                         BackgroundChangeResponsePayload backgroundPayload = item.payload.ToObject<BackgroundChangeResponsePayload>();
                         responseHandlerPackage.backgroundChangeHandler(backgroundPayload.scene);
                         break;
+                    case "item_gift":
+                        ItemGiftResponsePayload itemPayload = item.payload.ToObject<ItemGiftResponsePayload>();
+                        responseHandlerPackage.itemGiftHandler(itemPayload.item);
+                        break;
                     default:
                         Debug.LogWarning("Unknown type: " + item.type);
                         break;
@@ -143,8 +147,13 @@ public class BackgroundChangeResponsePayload : ResponsePayload {
     public string scene;
 }
 
+public class ItemGiftResponsePayload : ResponsePayload {
+    public string item;
+}
+
 public class ResponseHandlerPackage {
     public Action<string> textHandler;
     public Action<string,string> faceTalkHandler;
     public Action<string> backgroundChangeHandler;
+    public Action<string> itemGiftHandler;
 }

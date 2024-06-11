@@ -9,6 +9,7 @@ public class ConversationController : MonoBehaviour
     public VoiceflowController voiceflowController;
     public FaceController faceController;
     public BackgroundController backgroundController;
+    public InventoryController inventoryController;
 
     public TextBoxHandler outputTextBox;
     public TMP_InputField inputField;
@@ -37,7 +38,8 @@ public class ConversationController : MonoBehaviour
         responseHandlerPackage = new ResponseHandlerPackage{
             textHandler = EnqueueBasicMessage,
             faceTalkHandler = EnqueueFaceTalk,
-            backgroundChangeHandler = EnqueueBackgroundChange
+            backgroundChangeHandler = EnqueueBackgroundChange,
+            itemGiftHandler = EnqueueItemGift
         };
     }
 
@@ -97,6 +99,15 @@ public class ConversationController : MonoBehaviour
         EnqueueFirstMessageCheck();
     }
 
+    public void EnqueueItemGift(string item) {
+        ItemGiftEvent itemGiftEvent = new ItemGiftEvent {
+            item = item,
+            inventoryController = inventoryController
+        };
+        conversationQueue.Enqueue(itemGiftEvent);
+        EnqueueFirstMessageCheck();
+    }
+
     public void ContinueButtonClicked() {
         if (conversationQueue.Count > 0) {
             ConversationEvent nextEvent = conversationQueue.Dequeue();
@@ -135,6 +146,18 @@ public class ConversationController : MonoBehaviour
         {
             backgroundController.SetBackground(scene);
             Debug.Log($"Background: {scene}");
+        }
+    }
+
+    public class ItemGiftEvent : ConversationEvent
+    {
+        public string item { get; set; }
+        public InventoryController inventoryController;
+
+        public override void Handle()
+        {
+            inventoryController.AddItem(item);
+            Debug.Log($"Item: {item}");
         }
     }
 }

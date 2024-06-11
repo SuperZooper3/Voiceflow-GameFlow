@@ -8,8 +8,10 @@ public class ConversationController : MonoBehaviour
 {
     public VoiceflowController voiceflowController;
     public FaceController faceController;
+    public BackgroundController backgroundController;
 
     public TextMeshProUGUI outputTextBox;
+    public TMP_InputField inputField;
     public string textPayload = "";
     public GameObject readingItems;
     public GameObject inputItems;
@@ -23,6 +25,7 @@ public class ConversationController : MonoBehaviour
         Debug.Log("Send button clicked");
         voiceflowController.SendTextVoiceflow(textPayload, responseHandlerPackage);
         isWaitingForResponse = true;
+        inputField.text = "";
     }
 
     public void UpdateTextPayload(string newText) {
@@ -33,9 +36,9 @@ public class ConversationController : MonoBehaviour
         responseHandlerPackage = new ResponseHandlerPackage{
             textHandler = EnqueueChatMessage,
             faceTalkHandler = HandleFaceTalk,
+            backgroundChangeHandler = HandleBackgroundChange
         };
     }
-
 
     // Start is called before the first frame update
     void Start()
@@ -104,5 +107,9 @@ public class ConversationController : MonoBehaviour
     private class Message {
         public string message;
         public string face;
+    }
+
+    public void HandleBackgroundChange(string scene) {
+        backgroundController.SetBackground(scene);
     }
 }

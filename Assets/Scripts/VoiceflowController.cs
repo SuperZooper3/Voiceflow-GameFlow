@@ -72,6 +72,10 @@ public class VoiceflowController : MonoBehaviour
                         FaceTalkResponsePayload customPayload = item.payload.ToObject<FaceTalkResponsePayload>();
                         responseHandlerPackage.faceTalkHandler(customPayload.message, customPayload.face);
                         break;
+                    case "scene_change":
+                        BackgroundChangeResponsePayload backgroundPayload = item.payload.ToObject<BackgroundChangeResponsePayload>();
+                        responseHandlerPackage.backgroundChangeHandler(backgroundPayload.scene);
+                        break;
                     default:
                         Debug.LogWarning("Unknown type: " + item.type);
                         break;
@@ -135,7 +139,12 @@ public class FaceTalkResponsePayload : ResponsePayload {
     public string face;
 }
 
+public class BackgroundChangeResponsePayload : ResponsePayload {
+    public string scene;
+}
+
 public class ResponseHandlerPackage {
     public Action<string> textHandler;
     public Action<string,string> faceTalkHandler;
+    public Action<string> backgroundChangeHandler;
 }

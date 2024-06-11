@@ -312,11 +312,10 @@ MonoBehaviour:
   angryFace: {fileID: 2800000, guid: 4e68db52461784581802db34c2d94693, type: 3}
   distractedFace: {fileID: 2800000, guid: fb451964e000042ed9c1cc798352e0cf, type: 3}
   panicFace: {fileID: 2800000, guid: 53e47f9fe2ccc46f5bc8b6cd89a3aa03, type: 3}
-  suprisedFace: {fileID: 2800000, guid: 1ee9569b21aea4021a1a149916891ea7, type: 3}
+  surprisedFace: {fileID: 2800000, guid: 1ee9569b21aea4021a1a149916891ea7, type: 3}
   upsetFace: {fileID: 2800000, guid: ed638bcbc2ebb4f10a5467009bfc59d5, type: 3}
   phoneFace: {fileID: 2800000, guid: c70789b40157a4d3f9f1e8a374612359, type: 3}
   badFace: {fileID: 2800000, guid: 42999fa1183594eb794ec3a8bf79ad67, type: 3}
-  face: normal
 --- !u!114 &168794176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voiceflowController: {fileID: 1654853209}
+  faceController: {fileID: 168794175}
   outputTextBox: {fileID: 95109486}
   textPayload: Hello
   readingItems: {fileID: 608311100}
@@ -1050,7 +1050,19 @@ MonoBehaviour:
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 183250272}
+        m_TargetAssemblyTypeName: ConversationController, Assembly-CSharp
+        m_MethodName: SendButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -1681,7 +1693,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DM_API_KEY: VF.DM.66677314d088ba19d58181f1.Ab9XTI9y4x3KEKBn
-  userID: test-user-unity-3
+  userID: test-user-unity-10
 --- !u!4 &1654853210
 Transform:
   m_ObjectHideFlags: 0

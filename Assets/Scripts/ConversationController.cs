@@ -16,7 +16,7 @@ public class ConversationController : MonoBehaviour
 
     private bool isWaitingForResponse = false;
     private bool isReadingResponse = false;
-    private Queue<string> conversationQueue = new Queue<string>();
+    private Queue<Message> conversationQueue = new Queue<Message>();
     private ResponseHandlerPackage responseHandlerPackage = new ResponseHandlerPackage();
 
     public void SendButtonClicked() {
@@ -64,10 +64,12 @@ public class ConversationController : MonoBehaviour
 
     public void EnqueueChatMessage(string newText) {
         isWaitingForResponse = false;
-        Debug.Log("EnqueueChatMessage: " + newText);
-        Debug.Log("Conversation queue count: " + conversationQueue.Count);
         if (isReadingResponse) {
-            conversationQueue.Enqueue(newText);
+            Message message = new Message{
+                message = newText,
+                face = "bad"
+            };
+            conversationQueue.Enqueue(message);
         } else {
             SetOutputText(newText);
         }
@@ -76,22 +78,31 @@ public class ConversationController : MonoBehaviour
 
     public void HandleFaceTalk(string newText, string face) {
         isWaitingForResponse = false;
-        Debug.Log("HandleFaceTalk: " + newText);
-        Debug.Log("Conversation queue count: " + conversationQueue.Count);
         if (isReadingResponse) {
-            conversationQueue.Enqueue(newText);
+            Message message = new Message{
+                message = newText,
+                face = face
+            };
+            conversationQueue.Enqueue(message);
         } else {
             SetOutputText(newText);
         }
         isReadingResponse = true;
-        faceController.SetFace(face);
     }
 
     public void ContinueButtonClicked() {
         if (conversationQueue.Count > 0) {
-            SetOutputText(conversationQueue.Dequeue());
+            Message message = conversationQueue.Dequeue();
+            SetOutputText(message.message);
+            faceController.SetFace(message.face);
+            Debug.Log("Message and face: " + message.message + " | " + message.face);
         } else {
             isReadingResponse = false;
         }
+    }
+
+    private class Message {
+        public string message;
+        public string face;
     }
 }

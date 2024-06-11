@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
 public class ConversationController : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class ConversationController : MonoBehaviour
     public GameObject readingItems;
     public GameObject inputItems;
     public GameObject waitingItems;
+    public Button[] itemButtons;
 
     private bool isWaitingForResponse = false;
     private bool isReadingResponse = false;
@@ -64,14 +66,23 @@ public class ConversationController : MonoBehaviour
             readingItems.SetActive(true);
             inputItems.SetActive(false);
             waitingItems.SetActive(false);
+            InterractibleItemButtons(false);
         } else if (isWaitingForResponse) {
             readingItems.SetActive(false);
             inputItems.SetActive(false);
             waitingItems.SetActive(true);
+            InterractibleItemButtons(false);
         } else {
             readingItems.SetActive(false);
             inputItems.SetActive(true);
             waitingItems.SetActive(false);
+            InterractibleItemButtons(true);
+        }
+    }
+
+    private void InterractibleItemButtons(bool interactible) {
+        foreach (Button button in itemButtons) {
+            button.interactable = interactible;
         }
     }
 

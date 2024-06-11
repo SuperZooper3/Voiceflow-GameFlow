@@ -18,7 +18,7 @@ public class ConversationController : MonoBehaviour
 
     private bool isWaitingForResponse = false;
     private bool isReadingResponse = false;
-    private Queue<Message> conversationQueue = new Queue<Message>();
+    private Queue<ConversationEvent> conversationQueue = new Queue<ConversationEvent>();
     private ResponseHandlerPackage responseHandlerPackage = new ResponseHandlerPackage();
 
     public void SendButtonClicked() {
@@ -34,9 +34,9 @@ public class ConversationController : MonoBehaviour
 
     public ConversationController() {
         responseHandlerPackage = new ResponseHandlerPackage{
-            textHandler = EnqueueChatMessage,
-            faceTalkHandler = HandleFaceTalk,
-            backgroundChangeHandler = HandleBackgroundChange
+            textHandler = EnqueueBasicMessage,
+            faceTalkHandler = EnqueueFaceTalk,
+            backgroundChangeHandler = EnqueueBackgroundChange
         };
     }
 
@@ -61,55 +61,76 @@ public class ConversationController : MonoBehaviour
         }
     }
 
-    void SetOutputText(string newText) {
-        outputTextBox.text = newText;
-    }
-
-    public void EnqueueChatMessage(string newText) {
-        isWaitingForResponse = false;
-        if (isReadingResponse) {
-            Message message = new Message{
-                message = newText,
-                face = "bad"
-            };
-            conversationQueue.Enqueue(message);
-        } else {
-            SetOutputText(newText);
+    private void EnqueueFirstMessageCheck() {
+        if (!isReadingResponse) {
+            ContinueButtonClicked();
         }
         isReadingResponse = true;
+        isWaitingForResponse = false;
     }
 
-    public void HandleFaceTalk(string newText, string face) {
-        isWaitingForResponse = false;
-        if (isReadingResponse) {
-            Message message = new Message{
-                message = newText,
-                face = face
-            };
-            conversationQueue.Enqueue(message);
-        } else {
-            SetOutputText(newText);
-        }
-        isReadingResponse = true;
+    public void EnqueueBasicMessage(string newText) {
+        EnqueueFaceTalk(newText, "normal");
+    }
+
+    public void EnqueueFaceTalk(string newText, string face) {
+        MessageEvent messageEvent = new MessageEvent {
+            messageContent = newText,
+            face = face,
+            outputTextBox = outputTextBox,
+            faceController = faceController
+        };
+        conversationQueue.Enqueue(messageEvent);
+        EnqueueFirstMessageCheck();
+    }
+
+    public void EnqueueBackgroundChange(string scene) {
+        BackgroundEvent backgroundEvent = new BackgroundEvent {
+            scene = scene,
+            backgroundController = backgroundController
+        };
+        conversationQueue.Enqueue(backgroundEvent);
+        EnqueueFirstMessageCheck();
     }
 
     public void ContinueButtonClicked() {
         if (conversationQueue.Count > 0) {
-            Message message = conversationQueue.Dequeue();
-            SetOutputText(message.message);
-            faceController.SetFace(message.face);
-            Debug.Log("Message and face: " + message.message + " | " + message.face);
+            ConversationEvent nextEvent = conversationQueue.Dequeue();
+            nextEvent.Handle();
         } else {
             isReadingResponse = false;
         }
     }
 
-    private class Message {
-        public string message;
-        public string face;
+    public abstract class ConversationEvent
+    {
+        public abstract void Handle();
     }
 
-    public void HandleBackgroundChange(string scene) {
-        backgroundController.SetBackground(scene);
+    public class MessageEvent : ConversationEvent
+    {
+        public string messageContent { get; set; }
+        public string face { get; set; }
+        public TextMeshProUGUI outputTextBox;
+        public FaceController faceController;
+
+        public override void Handle()
+        {
+            outputTextBox.text = messageContent;
+            faceController.SetFace(face);
+            Debug.Log($"Message: {messageContent}");
+        }
+    }
+
+    public class BackgroundEvent : ConversationEvent
+    {
+        public string scene { get; set; }
+        public BackgroundController backgroundController;
+
+        public override void Handle()
+        {
+            backgroundController.SetBackground(scene);
+            Debug.Log($"Background: {scene}");
+        }
     }
 }

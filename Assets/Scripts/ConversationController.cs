@@ -10,7 +10,7 @@ public class ConversationController : MonoBehaviour
     public FaceController faceController;
     public BackgroundController backgroundController;
 
-    public TextMeshProUGUI outputTextBox;
+    public TextBoxHandler outputTextBox;
     public TMP_InputField inputField;
     public string textPayload = "";
     public GameObject readingItems;
@@ -111,12 +111,12 @@ public class ConversationController : MonoBehaviour
     {
         public string messageContent { get; set; }
         public string face { get; set; }
-        public TextMeshProUGUI outputTextBox;
+        public TextBoxHandler outputTextBox;
         public FaceController faceController;
 
         public override void Handle()
         {
-            outputTextBox.text = messageContent;
+            outputTextBox.SetTextPayload(messageContent);
             faceController.SetFace(face);
             Debug.Log($"Message: {messageContent}");
         }

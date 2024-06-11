@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 95109485}
   - component: {fileID: 95109487}
   - component: {fileID: 95109486}
+  - component: {fileID: 95109488}
   m_Layer: 5
   m_Name: Output Text
   m_TagString: Untagged
@@ -256,6 +257,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 95109484}
   m_CullTransparentMesh: 1
+--- !u!114 &95109488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95109484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aaecbbc0a13b42e7b436f55829a3232, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textPayload: 
+  textMeshProUGUI: {fileID: 95109486}
+  framesBetweenCharacters: 3
 --- !u!1 &168794173
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,7 +402,7 @@ MonoBehaviour:
   voiceflowController: {fileID: 1654853209}
   faceController: {fileID: 168794175}
   backgroundController: {fileID: 1230506963}
-  outputTextBox: {fileID: 95109486}
+  outputTextBox: {fileID: 95109488}
   inputField: {fileID: 660680570}
   textPayload: Hello
   readingItems: {fileID: 608311100}

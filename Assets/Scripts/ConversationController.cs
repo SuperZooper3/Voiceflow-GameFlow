@@ -38,6 +38,7 @@ public class ConversationController : MonoBehaviour
             voiceflowController.SendTextVoiceflow($"*The climber gifted you their {item}*", responseHandlerPackage);
             isWaitingForResponse = true;
         }
+        inventoryController.RemoveItem(slot);
     }
 
     public void UpdateTextPayload(string newText) {

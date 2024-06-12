@@ -9,6 +9,7 @@ public class ConversationController : MonoBehaviour
 {
     public VoiceflowController voiceflowController;
     public FaceController faceController;
+    public SpeakingController speakingController;
     public BackgroundController backgroundController;
     public InventoryController inventoryController;
 
@@ -20,7 +21,7 @@ public class ConversationController : MonoBehaviour
     public GameObject waitingItems;
     public Button[] itemButtons;
 
-    private bool isWaitingForResponse = false;
+    private bool isWaitingForResponse = true;
     private bool isReadingResponse = false;
     private Queue<ConversationEvent> conversationQueue = new Queue<ConversationEvent>();
     private ResponseHandlerPackage responseHandlerPackage = new ResponseHandlerPackage();
@@ -49,6 +50,7 @@ public class ConversationController : MonoBehaviour
         responseHandlerPackage = new ResponseHandlerPackage{
             textHandler = EnqueueBasicMessage,
             faceTalkHandler = EnqueueFaceTalk,
+            spokenFaceTalkHandler = EnqueueSpokenMessage,
             backgroundChangeHandler = EnqueueBackgroundChange,
             itemGiftHandler = EnqueueItemGift
         };
@@ -110,6 +112,19 @@ public class ConversationController : MonoBehaviour
         EnqueueFirstMessageCheck();
     }
 
+    public void EnqueueSpokenMessage(string newText, string face, string base64AudioData) {
+        SpokenEvent spokenEvent = new SpokenEvent {
+            messageContent = newText,
+            face = face,
+            base64AudioData = base64AudioData,
+            outputTextBox = outputTextBox,
+            faceController = faceController,
+            speakingController = speakingController
+        };
+        conversationQueue.Enqueue(spokenEvent);
+        EnqueueFirstMessageCheck();
+    }
+
     public void EnqueueBackgroundChange(string scene) {
         BackgroundEvent backgroundEvent = new BackgroundEvent {
             scene = scene,
@@ -154,6 +169,25 @@ public class ConversationController : MonoBehaviour
             outputTextBox.SetTextPayload(messageContent);
             faceController.SetFace(face);
             Debug.Log($"Message: {messageContent}");
+        }
+    }
+
+    public class SpokenEvent : ConversationEvent
+    {
+        public string messageContent { get; set; }
+        public string face { get; set; }
+        public string base64AudioData { get; set; }
+        
+        public TextBoxHandler outputTextBox;
+        public FaceController faceController;
+        public SpeakingController speakingController;
+
+        public override void Handle()
+        {
+            outputTextBox.SetTextPayload(messageContent);
+            faceController.SetFace(face);
+            speakingController.PlayBase64Audio(base64AudioData);
+            Debug.Log($"Spoken: {messageContent}");
         }
     }
 

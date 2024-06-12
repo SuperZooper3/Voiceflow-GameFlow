@@ -72,6 +72,11 @@ public class VoiceflowController : MonoBehaviour
                         FaceTalkResponsePayload customPayload = item.payload.ToObject<FaceTalkResponsePayload>();
                         responseHandlerPackage.faceTalkHandler(customPayload.message, customPayload.face);
                         break;
+                    case "face_speech_talk":
+                        SpokenFaceTalkResponsePayload spokenPayload = item.payload.ToObject<SpokenFaceTalkResponsePayload>();
+                        Debug.LogError(spokenPayload.base64AudioData.Length);
+                        responseHandlerPackage.spokenFaceTalkHandler(spokenPayload.message, spokenPayload.face, spokenPayload.base64AudioData);
+                        break;
                     case "scene_change":
                         BackgroundChangeResponsePayload backgroundPayload = item.payload.ToObject<BackgroundChangeResponsePayload>();
                         responseHandlerPackage.backgroundChangeHandler(backgroundPayload.scene);
@@ -143,6 +148,12 @@ public class FaceTalkResponsePayload : ResponsePayload {
     public string face;
 }
 
+public class SpokenFaceTalkResponsePayload : ResponsePayload {
+    public string message;
+    public string face;
+    public string base64AudioData;
+}
+
 public class BackgroundChangeResponsePayload : ResponsePayload {
     public string scene;
 }
@@ -154,6 +165,7 @@ public class ItemGiftResponsePayload : ResponsePayload {
 public class ResponseHandlerPackage {
     public Action<string> textHandler;
     public Action<string,string> faceTalkHandler;
+    public Action<string,string,string> spokenFaceTalkHandler;
     public Action<string> backgroundChangeHandler;
     public Action<string> itemGiftHandler;
 }

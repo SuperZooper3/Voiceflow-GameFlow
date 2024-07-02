@@ -74,7 +74,6 @@ public class VoiceflowController : MonoBehaviour
                         break;
                     case "face_speech_talk":
                         SpokenFaceTalkResponsePayload spokenPayload = item.payload.ToObject<SpokenFaceTalkResponsePayload>();
-                        Debug.LogError(spokenPayload.base64AudioData.Length);
                         responseHandlerPackage.spokenFaceTalkHandler(spokenPayload.message, spokenPayload.face, spokenPayload.base64AudioData);
                         break;
                     case "scene_change":

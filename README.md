@@ -1,7 +1,7 @@
 # Voiceflow GameFlow: LLM powered Unity Game
 A Unity game integrating [Voiceflow](https://www.voiceflow.com/?utm_source=github&utm_medium=organic&utm_campaign=developer&utm_content=unity-chat-github) as a custom interface with an LMM powered NPC, that not only can have organic conversatoins, but through agent design can also interract with the game world, by giving or receiving items, changing the game scene, or pulling from a knowledge base of lore.
 
-<img src="Welcome1.png" alt="A screenshot of madeline welcoming us" style="max-width:700px;">
+<img src="Welcome.png" alt="A screenshot of madeline welcoming us" style="max-width:700px;">
 
 All the graphics for the game are from [Celeste](https://www.celestegame.com/).
 
@@ -17,7 +17,7 @@ Full design walkthrough:
 - Lore based dialogue with documents pulled from a knowledge base in Voiceflow.
 
 
-<img src="Summit2.png" alt="At the summit" style="max-width:700px;">
+<img src="Summit.png" alt="At the summit" style="max-width:700px;">
 
 ## How to set up
 

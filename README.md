@@ -33,3 +33,6 @@ Full design walkthrough:
 4. Open the project in Unity (the project is made in 2022.3.30f1) and set the `VoiceflowAPIKey` in the `VoiceflowController` script.
 5. Run the project and start the conversation!
 
+<a href="https://trackgit.com">
+<img src="https://us-central1-trackgit-analytics.cloudfunctions.net/token/ping/lyx0yakhyl5a2ixfn6ly" alt="trackgit-views" />
+</a>
